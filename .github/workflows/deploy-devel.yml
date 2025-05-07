@@ -1,0 +1,37 @@
+name: Deploy Devel
+
+on:
+  push:
+    branches: ["devel"]
+  pull_request:
+    branches: ["devel"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER01_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SERVER01_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Run DB Docker Image on VPS
+        run: |
+          ssh ${{ secrets.SERVER01_USER }}@${{ secrets.SERVER01_HOST }} << 'EOF'
+            docker stop icomphub-postgres-devel || true
+            docker rm icomphub-postgres-devel || true
+            docker run -d \
+              --name icomphub-postgres-devel \
+              -e POSTGRES_DB=${{ vars.DB_DEVEL }}
+              -e POSTGRES_USER=${{ vars.DB_USER_DEVEL }} \
+              -e POSTGRES_PASSWORD=${{ secrets.DB_PW_DEVEL }} \
+              -p ${{ vars.DB_PORT_DEVEL }}:5432 \
+              -v ${{ secrets.DB_VOLUME_DEVEL }}:/var/lib/postgresql/data \
+              --restart unless-stopped \
+              postgres:17.4
+          EOF
