@@ -27,7 +27,7 @@ jobs:
             docker rm icomphub-postgres || true
             docker run -d \
               --name icomphub-postgres \
-              -e POSTGRES_DB=${{ vars.DB_PROD }}
+              -e POSTGRES_DB=${{ vars.DB_PROD }} \
               -e POSTGRES_USER=${{ vars.DB_USER_PROD }} \
               -e POSTGRES_PASSWORD=${{ secrets.DB_PW_PROD }} \
               -p ${{ vars.DB_PORT_PROD }}:5432 \

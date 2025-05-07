@@ -27,7 +27,7 @@ jobs:
             docker rm icomphub-postgres-staging || true
             docker run -d \
               --name icomphub-postgres-staging \
-              -e POSTGRES_DB=${{ vars.DB_STAGING }}
+              -e POSTGRES_DB=${{ vars.DB_STAGING }} \
               -e POSTGRES_USER=${{ vars.DB_USER_STAGING }} \
               -e POSTGRES_PASSWORD=${{ secrets.DB_PW_STAGING }} \
               -p ${{ vars.DB_PORT_STAGING }}:5432 \

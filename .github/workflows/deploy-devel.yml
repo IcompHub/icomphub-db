@@ -27,7 +27,7 @@ jobs:
             docker rm icomphub-postgres-devel || true
             docker run -d \
               --name icomphub-postgres-devel \
-              -e POSTGRES_DB=${{ vars.DB_DEVEL }}
+              -e POSTGRES_DB=${{ vars.DB_DEVEL }} \
               -e POSTGRES_USER=${{ vars.DB_USER_DEVEL }} \
               -e POSTGRES_PASSWORD=${{ secrets.DB_PW_DEVEL }} \
               -p ${{ vars.DB_PORT_DEVEL }}:5432 \
