@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:17.4
+    user: root
+    restart: unless-stopped
+    container_name: icomphub-postgres
+    environment:
+      POSTGRES_USER: icomphub
+      POSTGRES_PASSWORD: development0nly
+    volumes:
+      - ./psql:/var/lib/postgresql/data
+    networks:
+      - appnet
+    ports:
+      - "5416:5432"
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   user: root
+  #   restart: unless-stopped
+  #   container_name: icomphub-pgadmin
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: icomphub@icomp.ufam.edu.br
+  #     PGADMIN_DEFAULT_PASSWORD: development0nly
+  #   volumes:
+  #     - ./pgadmin:/var/lib/pgadmin
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - appnet
+  #   ports:
+  #     - "5080:80"
+
+networks:
+  appnet:
+    driver: bridge
